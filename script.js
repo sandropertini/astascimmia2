@@ -1,30 +1,28 @@
 // Stato globale
-let player = { name: '', credits: 21000000, bids: {} }; // 21M banane
-let characters = []; // Tutti i personaggi
-let filteredCharacters = []; // Personaggi filtrati/ordinati
-let sortColumn = null; // Colonna corrente per ordinamento
-let sortDirection = 'asc'; // Direzione: 'asc' o 'desc'
+let player = { name: '', credits: 21000000, bids: {} };
+let characters = [];
+let filteredCharacters = [];
+let sortColumn = null;
+let sortDirection = 'asc';
 
 // Inizializzazione pagina
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('csv-file').addEventListener('change', handleCSVUpload);
+    fetch('scimmie.csv')
+        .then(response => {
+            if (!response.ok) throw new Error('File non trovato');
+            return response.text();
+        })
+        .then(csvData => {
+            parseCSV(csvData);
+            updateCharacterList();
+        })
+        .catch(error => {
+            console.error('Errore:', error);
+            alert('Errore nel caricamento scimmie.csv: ' + error.message);
+        });
 });
 
-// Gestione caricamento CSV
-function handleCSVUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const csvData = e.target.result;
-        parseCSV(csvData);
-        updateCharacterList();
-    };
-    reader.readAsText(file);
-}
-
-// Parsing del CSV
+// Parsing del CSV (rimane identico alla versione precedente)
 function parseCSV(csvData) {
     const rows = csvData.split('\n').filter(row => row.trim() !== '');
     const headers = rows[0].split(',').map(h => h.trim());
@@ -57,6 +55,7 @@ function parseCSV(csvData) {
     
     filteredCharacters = [...characters];
 }
+
 
 // Imposta il nome del giocatore
 function setPlayerName() {
