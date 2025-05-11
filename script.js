@@ -205,57 +205,62 @@ function loadAndCompareBids() {
     });
 }
 
-// Calcola risultati asta con limite di 9 personaggi
+// Calcola risultati asta con limite di 10 personaggi
 function computeAuctionResults(allBids) {
     const resultsDiv = document.getElementById('auction-results');
     const winners = {};
     const playerAssignments = {};
-    const playerCharacterCount = {};
+    const playerPotentialWins = {};
 
     // Inizializza strutture
     allBids.forEach(bid => {
         playerAssignments[bid.playerName] = [];
-        playerCharacterCount[bid.playerName] = 0;
+        playerPotentialWins[bid.playerName] = [];
     });
 
-    // Raccogli offerte per personaggio
-    const bidsByCharacter = {};
+    // Determina vincitori iniziali per ogni personaggio
     characters.forEach(character => {
-        bidsByCharacter[character.id] = allBids
+        const bids = allBids
             .map(bid => ({
                 player: bid.playerName,
-                amount: bid.bids[character.id] || 0
+                amount: bid.bids[character.id] || 0,
+                character
             }))
             .filter(bid => bid.amount > 0)
             .sort((a, b) => b.amount - a.amount);
-    });
 
-    // Assegna personaggi
-    const assignedCharacters = new Set();
-    characters.forEach(character => {
-        const bids = bidsByCharacter[character.id];
-        if (!bids.length) return;
+        if (bids.length === 0) return;
 
-        let bidIndex = 0;
-        while (bidIndex < bids.length) {
-            const { player, amount } = bids[bidIndex];
-            if (playerCharacterCount[player] < 9 && !assignedCharacters.has(character.id)) {
-                const isUnique = bidIndex === 0 || bids[bidIndex - 1].amount > amount;
-                if (isUnique) {
-                    winners[character.id] = { player, bid: amount, character };
-                    playerAssignments[player].push({
-                        character: character.name,
-                        bid: amount,
-                        position: character.suggestedPosition
-                    });
-                    playerCharacterCount[player]++;
-                    assignedCharacters.add(character.id);
-                    break;
-                }
-            }
-            bidIndex++;
+        // Controlla se l'offerta più alta è unica
+        const topBid = bids[0];
+        const isUnique = bids.length === 1 || bids[0].amount > bids[1].amount;
+        if (isUnique) {
+            playerPotentialWins[topBid.player].push({
+                character: topBid.character,
+                bid: topBid.amount
+            });
         }
     });
+
+    // Assegna i migliori 10 personaggi per ogni giocatore
+    for (const player of Object.keys(playerPotentialWins)) {
+        // Ordina le vittorie potenziali per offerta decrescente
+        const wins = playerPotentialWins[player].sort((a, b) => b.bid - a.bid);
+        // Prendi solo i primi 10
+        const assignedWins = wins.slice(0, 10);
+        assignedWins.forEach(win => {
+            winners[win.character.id] = {
+                player,
+                bid: win.bid,
+                character: win.character
+            };
+            playerAssignments[player].push({
+                character: win.character.name,
+                bid: win.bid,
+                position: win.character.suggestedPosition
+            });
+        });
+    }
 
     // Mostra risultati
     const ul = document.createElement('ul');
@@ -271,7 +276,7 @@ function computeAuctionResults(allBids) {
     summary.innerHTML = '<h4>Riepilogo Squadre</h4>';
     for (const [player, assignments] of Object.entries(playerAssignments)) {
         const p = document.createElement('p');
-        p.innerHTML = `<strong>${player}</strong> (${assignments.length}/9 personaggi): ${assignments.length > 0 ? assignments.map(a => `${a.character} (${a.bid.toLocaleString('it-IT')} banane)`).join(', ') : 'Nessun personaggio assegnato'}`;
+        p.innerHTML = `<strong>${player}</strong> (${assignments.length}/10 personaggi): ${assignments.length > 0 ? assignments.map(a => `${a.character} (${a.bid.toLocaleString('it-IT')} banane)`).join(', ') : 'Nessun personaggio assegnato'}`;
         summary.appendChild(p);
     }
     resultsDiv.appendChild(summary);
