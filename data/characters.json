@@ -9,5 +9,4 @@
   {"id":267,"name":"APE-01","speed":8,"kickPower":9,"heading":7,"sliding":6,"technique":5,"stamina":7,"strength":9,"catching":7,"total":58,"outfieldNoCNoSta":44,"outfieldNoC":51,"keeper":16},
   {"id":158,"name":"Sphinx","speed":6,"kickPower":6,"heading":7,"sliding":9,"technique":7,"stamina":7,"strength":8,"catching":8,"total":58,"outfieldNoCNoSta":43,"outfieldNoC":50,"keeper":16},
   {"id":296,"name":"Lee","speed":5,"kickPower":9,"heading":6,"sliding":7,"technique":6,"stamina":7,"strength":8,"catching":9,"total":57,"outfieldNoCNoSta":41,"outfieldNoC":48,"keeper":17},
-  // ... (omesso per brevità, gli altri 200+ elementi seguono lo stesso formato)
-]
+  ]
