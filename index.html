@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ape Escape 2 Monkey Football - Asta Personaggi</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/game-character-auction/styles.css">
 </head>
 <body>
     <h1>Ape Escape 2 Monkey Football - Asta Personaggi</h1>
@@ -32,17 +32,17 @@
     <table>
         <thead>
             <tr>
-                <th>Nome</th>
-                <th>Posizione</th>
-                <th>Totale</th>
-                <th>Velocità</th>
-                <th>Potenza Tiro</th>
-                <th>Colpo di Testa</th>
-                <th>Scivolata</th>
-                <th>Tecnica</th>
-                <th>Resistenza</th>
-                <th>Forza</th>
-                <th>Presa</th>
+                <th data-sort="name" onclick="sortTable('name')">Nome</th>
+                <th data-sort="suggestedPosition" onclick="sortTable('suggestedPosition')">Posizione</th>
+                <th data-sort="total" onclick="sortTable('total')">Totale</th>
+                <th data-sort="speed" onclick="sortTable('speed')">Velocità</th>
+                <th data-sort="kickPower" onclick="sortTable('kickPower')">Potenza Tiro</th>
+                <th data-sort="heading" onclick="sortTable('heading')">Colpo di Testa</th>
+                <th data-sort="sliding" onclick="sortTable('sliding')">Scivolata</th>
+                <th data-sort="technique" onclick="sortTable('technique')">Tecnica</th>
+                <th data-sort="stamina" onclick="sortTable('stamina')">Resistenza</th>
+                <th data-sort="strength" onclick="sortTable('strength')">Forza</th>
+                <th data-sort="catching" onclick="sortTable('catching')">Presa</th>
                 <th>Offerta (Banane)</th>
             </tr>
         </thead>
@@ -55,6 +55,6 @@
         <button onclick="loadAndCompareBids()">Confronta Offerte</button>
     </div>
     <div id="auction-results"></div>
-    <script src="script.js"></script>
+    <script src="/game-character-auction/script.js"></script>
 </body>
 </html>
