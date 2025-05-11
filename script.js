@@ -7,22 +7,56 @@ let sortDirection = 'asc'; // Direzione: 'asc' o 'desc'
 
 // Inizializzazione pagina
 document.addEventListener('DOMContentLoaded', () => {
-    fetch('data/characters.json')
-        .then(response => {
-            if (!response.ok) throw new Error('Errore nel caricamento di characters.json');
-            return response.json();
-        })
-        .then(data => {
-            characters = data;
-            filteredCharacters = [...data]; // Copia iniziale
-            updatePlayerInfo();
-            updateCharacterList();
-        })
-        .catch(error => {
-            console.error('Errore:', error);
-            alert('Impossibile caricare i personaggi. Verifica che data/characters.json esista.');
-        });
+    document.getElementById('csv-file').addEventListener('change', handleCSVUpload);
 });
+
+// Gestione caricamento CSV
+function handleCSVUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const csvData = e.target.result;
+        parseCSV(csvData);
+        updateCharacterList();
+    };
+    reader.readAsText(file);
+}
+
+// Parsing del CSV
+function parseCSV(csvData) {
+    const rows = csvData.split('\n').filter(row => row.trim() !== '');
+    const headers = rows[0].split(',').map(h => h.trim());
+    
+    characters = rows.slice(1).map(row => {
+        const cells = row.split(',');
+        const char = {};
+        
+        headers.forEach((header, index) => {
+            let value = cells[index]?.trim() || '';
+            const numericValue = parseInt(value, 10);
+            
+            switch(header) {
+                case 'id': char.id = numericValue; break;
+                case 'name': char.name = value; break;
+                case 'speed': char.speed = numericValue; break;
+                case 'Kick P': char.kickPower = numericValue; break;
+                case 'Heading': char.heading = numericValue; break;
+                case 'Sliding': char.sliding = numericValue; break;
+                case 'Technique': char.technique = numericValue; break;
+                case 'Stamina': char.stamina = numericValue; break;
+                case 'Strength': char.strength = numericValue; break;
+                case 'Catching': char.catching = numericValue; break;
+                case 'Total': char.total = numericValue; break;
+            }
+        });
+        
+        return char;
+    });
+    
+    filteredCharacters = [...characters];
+}
 
 // Imposta il nome del giocatore
 function setPlayerName() {
@@ -45,28 +79,18 @@ function updatePlayerInfo() {
     document.getElementById('credits').textContent = (player.credits - totalSpent).toLocaleString('it-IT');
 }
 
-// Filtra personaggi per posizione e nome
+// Filtra personaggi per nome
 function filterCharacters() {
-    const positionFilter = document.getElementById('position-filter').value;
     const nameFilter = document.getElementById('name-filter').value.toLowerCase();
-
-    filteredCharacters = characters.filter(character => {
-        const matchesPosition = !positionFilter || character.suggestedPosition === positionFilter;
-        const matchesName = !nameFilter || character.name.toLowerCase().includes(nameFilter);
-        return matchesPosition && matchesName;
-    });
-
-    // Mantieni ordinamento se attivo
-    if (sortColumn) {
-        sortCharacters(sortColumn, sortDirection);
-    }
-
+    filteredCharacters = characters.filter(character => 
+        character.name.toLowerCase().includes(nameFilter)
+    );
+    if (sortColumn) sortCharacters(sortColumn, sortDirection);
     updateCharacterList();
 }
 
 // Ordina tabella per colonna
 function sortTable(column) {
-    // Toggle direzione se stessa colonna
     if (sortColumn === column) {
         sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
     } else {
@@ -77,7 +101,6 @@ function sortTable(column) {
     sortCharacters(column, sortDirection);
     updateCharacterList();
 
-    // Aggiorna stile intestazioni
     document.querySelectorAll('th').forEach(th => {
         th.classList.remove('asc', 'desc');
         if (th.getAttribute('data-sort') === column) {
@@ -92,14 +115,12 @@ function sortCharacters(column, direction) {
         let valueA = a[column] || '';
         let valueB = b[column] || '';
 
-        // Ordinamento per stringhe
         if (typeof valueA === 'string') {
             valueA = valueA.toLowerCase();
             valueB = valueB.toLowerCase();
             return direction === 'asc' ? valueA.localeCompare(valueB) : valueB.localeCompare(valueA);
         }
 
-        // Ordinamento numerico
         return direction === 'asc' ? valueA - valueB : valueB - valueA;
     });
 }
@@ -112,7 +133,6 @@ function updateCharacterList() {
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td>${character.name}</td>
-            <td>${character.suggestedPosition || 'Nessuna'}</td>
             <td>${character.total}</td>
             <td>${character.speed}</td>
             <td>${character.kickPower}</td>
@@ -205,7 +225,7 @@ function loadAndCompareBids() {
     });
 }
 
-// Calcola risultati asta con limite di 10 personaggi
+// Calcola risultati asta
 function computeAuctionResults(allBids) {
     const resultsDiv = document.getElementById('auction-results');
     resultsDiv.innerHTML = '<h3>Risultati Aste</h3>';
@@ -213,13 +233,11 @@ function computeAuctionResults(allBids) {
     const playerAssignments = {};
     const playerPotentialWins = {};
 
-    // Inizializza strutture
     allBids.forEach(bid => {
         playerAssignments[bid.playerName] = [];
         playerPotentialWins[bid.playerName] = [];
     });
 
-    // Determina vincitori iniziali per ogni personaggio
     characters.forEach(character => {
         const bids = allBids
             .map(bid => ({
@@ -232,7 +250,6 @@ function computeAuctionResults(allBids) {
 
         if (bids.length === 0) return;
 
-        // Controlla se l'offerta più alta è unica
         const topBid = bids[0];
         const isUnique = bids.length === 1 || bids[0].amount > bids[1].amount;
         if (isUnique) {
@@ -243,11 +260,8 @@ function computeAuctionResults(allBids) {
         }
     });
 
-    // Assegna i migliori 10 personaggi per ogni giocatore
     for (const player of Object.keys(playerPotentialWins)) {
-        // Ordina le vittorie potenziali per offerta decrescente
         const wins = playerPotentialWins[player].sort((a, b) => b.bid - a.bid);
-        // Prendi solo i primi 10
         const assignedWins = wins.slice(0, 10);
         assignedWins.forEach(win => {
             winners[win.character.id] = {
@@ -256,41 +270,37 @@ function computeAuctionResults(allBids) {
                 character: win.character
             };
             playerAssignments[player].push({
-                id: win.character.id, // Aggiunto ID
+                id: win.character.id,
                 character: win.character.name,
-                bid: win.bid,
-                position: win.character.suggestedPosition
+                bid: win.bid
             });
         });
     }
 
-    // Mostra risultati con ID
     const ul = document.createElement('ul');
     for (const [charId, result] of Object.entries(winners)) {
         const li = document.createElement('li');
-        li.textContent = `ID: ${result.character.id} - ${result.character.name} (${result.character.suggestedPosition || 'Nessuna'}) assegnato a ${result.player} per ${result.bid.toLocaleString('it-IT')} banane`;
+        li.textContent = `ID: ${result.character.id} - ${result.character.name} assegnato a ${result.player} per ${result.bid.toLocaleString('it-IT')} banane`;
         ul.appendChild(li);
     }
     resultsDiv.appendChild(ul);
 
-    // Mostra riepilogo squadre
     const summary = document.createElement('div');
     summary.innerHTML = '<h4>Riepilogo Squadre</h4>';
     for (const [player, assignments] of Object.entries(playerAssignments)) {
         const p = document.createElement('p');
-        p.innerHTML = `<strong>${player}</strong> (${assignments.length}/10 personaggi): ${assignments.length > 0 ? assignments.map(a => `ID: ${a.id} - ${a.character} (${a.bid.toLocaleString('it-IT')} banane)`).join(', ') : 'Nessun personaggio assegnato'}`;
+        p.innerHTML = `<strong>${player}</strong> (${assignments.length}/10 personaggi): ${assignments.length > 0 ? assignments.map(a => `ID: ${a.id} - ${a.character}`).join(', ') : 'Nessun personaggio assegnato'}`;
         summary.appendChild(p);
     }
     resultsDiv.appendChild(summary);
 
-    // Aggiungi bottone per esportare le squadre
     const exportButton = document.createElement('button');
     exportButton.textContent = 'Esporta Squadre in JSON';
     exportButton.onclick = () => exportTeams(playerAssignments);
     resultsDiv.appendChild(exportButton);
 }
 
-// Esporta le squadre in un file JSON
+// Esporta le squadre in JSON
 function exportTeams(playerAssignments) {
     const teamsData = {
         teams: Object.entries(playerAssignments).map(([playerName, assignments]) => ({
@@ -298,7 +308,6 @@ function exportTeams(playerAssignments) {
             characters: assignments.map(a => ({
                 id: a.id,
                 name: a.character,
-                position: a.position,
                 bid: a.bid
             }))
         })),
