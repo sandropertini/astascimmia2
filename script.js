@@ -208,6 +208,7 @@ function loadAndCompareBids() {
 // Calcola risultati asta con limite di 10 personaggi
 function computeAuctionResults(allBids) {
     const resultsDiv = document.getElementById('auction-results');
+    resultsDiv.innerHTML = '<h3>Risultati Aste</h3>';
     const winners = {};
     const playerAssignments = {};
     const playerPotentialWins = {};
@@ -255,6 +256,7 @@ function computeAuctionResults(allBids) {
                 character: win.character
             };
             playerAssignments[player].push({
+                id: win.character.id, // Aggiunto ID
                 character: win.character.name,
                 bid: win.bid,
                 position: win.character.suggestedPosition
@@ -262,11 +264,11 @@ function computeAuctionResults(allBids) {
         });
     }
 
-    // Mostra risultati
+    // Mostra risultati con ID
     const ul = document.createElement('ul');
     for (const [charId, result] of Object.entries(winners)) {
         const li = document.createElement('li');
-        li.textContent = `${result.character.name} (${result.character.suggestedPosition || 'Nessuna'}) assegnato a ${result.player} per ${result.bid.toLocaleString('it-IT')} banane`;
+        li.textContent = `ID: ${result.character.id} - ${result.character.name} (${result.character.suggestedPosition || 'Nessuna'}) assegnato a ${result.player} per ${result.bid.toLocaleString('it-IT')} banane`;
         ul.appendChild(li);
     }
     resultsDiv.appendChild(ul);
@@ -276,8 +278,39 @@ function computeAuctionResults(allBids) {
     summary.innerHTML = '<h4>Riepilogo Squadre</h4>';
     for (const [player, assignments] of Object.entries(playerAssignments)) {
         const p = document.createElement('p');
-        p.innerHTML = `<strong>${player}</strong> (${assignments.length}/10 personaggi): ${assignments.length > 0 ? assignments.map(a => `${a.character} (${a.bid.toLocaleString('it-IT')} banane)`).join(', ') : 'Nessun personaggio assegnato'}`;
+        p.innerHTML = `<strong>${player}</strong> (${assignments.length}/10 personaggi): ${assignments.length > 0 ? assignments.map(a => `ID: ${a.id} - ${a.character} (${a.bid.toLocaleString('it-IT')} banane)`).join(', ') : 'Nessun personaggio assegnato'}`;
         summary.appendChild(p);
     }
     resultsDiv.appendChild(summary);
+
+    // Aggiungi bottone per esportare le squadre
+    const exportButton = document.createElement('button');
+    exportButton.textContent = 'Esporta Squadre in JSON';
+    exportButton.onclick = () => exportTeams(playerAssignments);
+    resultsDiv.appendChild(exportButton);
+}
+
+// Esporta le squadre in un file JSON
+function exportTeams(playerAssignments) {
+    const teamsData = {
+        teams: Object.entries(playerAssignments).map(([playerName, assignments]) => ({
+            player: playerName,
+            characters: assignments.map(a => ({
+                id: a.id,
+                name: a.character,
+                position: a.position,
+                bid: a.bid
+            }))
+        })),
+        timestamp: new Date().toISOString()
+    };
+
+    const jsonStr = JSON.stringify(teamsData, null, 2);
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `teams_${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
 }
