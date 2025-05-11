@@ -1,5 +1,5 @@
 // Stato globale
-let player = { name: '', credits: 10000000, bids: {} }; // 10M banane
+let player = { name: '', credits: 21000000, bids: {} }; // 21M banane
 let characters = []; // Tutti i personaggi
 let filteredCharacters = []; // Personaggi filtrati/ordinati
 let sortColumn = null; // Colonna corrente per ordinamento
