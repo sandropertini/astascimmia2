@@ -1,0 +1,5 @@
+[
+    {"id":297,"name":"Rupert","speed":7,"kickPower":8,"heading":8,"sliding":8,"technique":9,"stamina":8,"strength":7,"catching":7,"total":62,"outfieldNoCNoSta":47,"outfieldNoC":55,"keeper":14,"suggestedPosition":"Defender"},
+    {"id":282,"name":"Manuel","speed":8,"kickPower":8,"heading":8,"sliding":7,"technique":9,"stamina":7,"strength":7,"catching":7,"total":61,"outfieldNoCNoSta":47,"outfieldNoC":54,"keeper":14,"suggestedPosition":"Midfield"},
+    {"id":103,"name":"Chris","speed":7,"kickPower":7,"heading":7,"sliding":8,"technique":7,"stamina":9,"strength":7,"catching":8,"total":60,"outfieldNoCNoSta":43,"outfieldNoC":52,"keeper":15,"suggestedPosition":""}
+]
