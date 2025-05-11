@@ -118,6 +118,35 @@ th {
     font-family: 'Orbitron', sans-serif;
     text-transform: uppercase;
     text-shadow: 0 0 5px #000;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.3s;
+}
+
+th:hover {
+    background: linear-gradient(45deg, #ffff00, #00ffcc);
+}
+
+th[data-sort]::after {
+    content: '';
+    display: inline-block;
+    margin-left: 5px;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+}
+
+th.asc::after {
+    content: '▲';
+    color: #ffff00;
+    text-shadow: 0 0 5px #ffff00;
+}
+
+th.desc::after {
+    content: '▼';
+    color: #ffff00;
+    text-shadow: 0 0 5px #ffff00;
 }
 
 td {
