@@ -7,6 +7,9 @@ let sortDirection = 'asc';
 
 // Inizializzazione pagina
 document.addEventListener('DOMContentLoaded', () => {
+    const loadingDiv = document.getElementById('loading');
+    loadingDiv.style.display = 'block';
+    
     fetch('scimmie.csv')
         .then(response => {
             if (!response.ok) throw new Error('File non trovato');
@@ -19,21 +22,24 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(error => {
             console.error('Errore:', error);
             alert('Errore nel caricamento scimmie.csv: ' + error.message);
+        })
+        .finally(() => {
+            loadingDiv.style.display = 'none';
         });
 });
 
-// Parsing del CSV (rimane identico alla versione precedente)
+// Parsing del CSV con mapping colonne corretto
 function parseCSV(csvData) {
     const rows = csvData.split('\n').filter(row => row.trim() !== '');
     const headers = rows[0].split(',').map(h => h.trim());
     
     characters = rows.slice(1).map(row => {
-        const cells = row.split(',');
+        const cells = row.split(',').map(c => c.trim());
         const char = {};
         
         headers.forEach((header, index) => {
-            let value = cells[index]?.trim() || '';
-            const numericValue = parseInt(value, 10);
+            const value = cells[index] || '';
+            const numericValue = parseInt(value, 10) || 0;
             
             switch(header) {
                 case 'id': char.id = numericValue; break;
@@ -47,6 +53,9 @@ function parseCSV(csvData) {
                 case 'Strength': char.strength = numericValue; break;
                 case 'Catching': char.catching = numericValue; break;
                 case 'Total': char.total = numericValue; break;
+                case 'Outfield (-C -STA)': char.outfield1 = numericValue; break;
+                case 'Outfield (-C)': char.outfield2 = numericValue; break;
+                case 'Keeper (C+STR)': char.keeper = numericValue; break;
             }
         });
         
@@ -55,6 +64,60 @@ function parseCSV(csvData) {
     
     filteredCharacters = [...characters];
 }
+
+// Aggiorna lista personaggi con colonne corrette
+function updateCharacterList() {
+    const characterList = document.getElementById('characters');
+    characterList.innerHTML = '';
+    
+    filteredCharacters.forEach(character => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${character.name}</td>
+            <td>${character.speed}</td>
+            <td>${character.kickPower}</td>
+            <td>${character.heading}</td>
+            <td>${character.sliding}</td>
+            <td>${character.technique}</td>
+            <td>${character.stamina}</td>
+            <td>${character.strength}</td>
+            <td>${character.catching}</td>
+            <td>${character.total}</td>
+            <td>${character.outfield1}</td>
+            <td>${character.outfield2}</td>
+            <td>${character.keeper}</td>
+            <td>
+                <input type="number" min="0" 
+                       onchange="updateBid(${character.id}, this.value)"
+                       value="${player.bids[character.id] || ''}">
+            </td>
+        `;
+        characterList.appendChild(tr);
+    });
+    updatePlayerInfo();
+}
+
+// Modifica l'header della tabella nell'HTML:
+/*
+<thead>
+    <tr>
+        <th>Nome</th>
+        <th>Velocità</th>
+        <th>Potenza Tiro</th>
+        <th>Colpo di Testa</th>
+        <th>Scivolata</th>
+        <th>Tecnica</th>
+        <th>Resistenza</th>
+        <th>Forza</th>
+        <th>Presa</th>
+        <th>Totale</th>
+        <th>Outfield (-C -STA)</th>
+        <th>Outfield (-C)</th>
+        <th>Keeper (C+STR)</th>
+        <th>Offerta</th>
+    </tr>
+</thead>
+*/
 
 
 // Imposta il nome del giocatore
