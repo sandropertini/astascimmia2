@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asta Personaggi Ape Escape 2</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Asta Personaggi Ape Escape 2</h1>
+        <div id="player-info">
+            <label for="player-name-input">Inserisci il tuo nome:</label>
+            <input type="text" id="player-name-input" placeholder="Nome giocatore">
+            <button onclick="setPlayerName()">Conferma Nome</button>
+            <p>Giocatore: <span id="player-name">Nessuno</span> | Crediti: <span id="credits">5000</span></p>
+        </div>
+        <div id="bidding-section">
+            <h2>Fai le tue Offerte</h2>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Posizione</th>
+                        <th>Total</th>
+                        <th>Speed</th>
+                        <th>Kick</th>
+                        <th>Heading</th>
+                        <th>Sliding</th>
+                        <th>Technique</th>
+                        <th>Stamina</th>
+                        <th>Strength</th>
+                        <th>Catching</th>
+                        <th>Offerta</th>
+                    </tr>
+                </thead>
+                <tbody id="characters"></tbody>
+            </table>
+            <button onclick="saveBids()" id="save-bids-btn" disabled>Salva Offerte (JSON)</button>
+        </div>
+        <div id="results-section">
+            <h2>Determina Vincitori</h2>
+            <input type="file" id="json-files" multiple accept=".json">
+            <button onclick="loadAndCompareBids()">Carica e Confronta Offerte</button>
+            <div id="auction-results"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
