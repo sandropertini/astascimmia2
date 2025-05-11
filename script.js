@@ -6,7 +6,7 @@ let filteredCharacters = [];
 // Inizializza la pagina
 document.addEventListener("DOMContentLoaded", () => {
     // Carica personaggi da characters.json
-    fetch("/game-character-auction/data/characters.json")
+    fetch("data/characters.json")
         .then(response => {
             if (!response.ok) throw new Error("Errore nel caricamento di characters.json");
             return response.json();
