@@ -181,7 +181,6 @@
     {"id":142,"name":"Jonah","speed":2,"kickPower":6,"heading":1,"sliding":5,"technique":6,"stamina":8,"strength":6,"catching":8,"total":42,"outfieldNoCNoSta":26,"outfieldNoC":34,"keeper":14,"suggestedPosition":""},
     {"id":99,"name":"Lily","speed":6,"kickPower":6,"heading":5,"sliding":6,"technique":7,"stamina":3,"strength":6,"catching":3,"total":42,"outfieldNoCNoSta":36,"outfieldNoC":39,"keeper":9,"suggestedPosition":""},
     {"id":193,"name":"Lynn","speed":6,"kickPower":6,"heading":6,"sliding":6,"technique":4,"stamina":6,"strength":7,"catching":1,"total":42,"outfieldNoCNoSta":35,"outfieldNoC":41,"keeper":8,"suggestedPosition":""},
-    {"id":233,"name":"Miller","speed":6,"kickPower":3,"heading":5,"sliding７,"technique":7,"stamina":3,"strength":6,"catching":5,"total":42,"outfieldNoCNoSta":34,"outfieldNoC":37,"keeper":11,"suggestedPosition":""},
     {"id":150,"name":"Piz","speed":6,"kickPower":2,"heading":6,"sliding":7,"technique":4,"stamina":7,"strength":8,"catching":2,"total":42,"outfieldNoCNoSta":33,"outfieldNoC":40,"keeper":10,"suggestedPosition":""},
     {"id":259,"name":"Sinclair","speed":5,"kickPower":3,"heading":6,"sliding":7,"technique":5,"stamina":4,"strength":7,"catching":5,"total":42,"outfieldNoCNoSta":33,"outfieldNoC":37,"keeper":12,"suggestedPosition":""},
     {"id":222,"name":"Spank","speed":6,"kickPower":6,"heading":7,"sliding":7,"technique":2,"stamina":5,"strength":7,"catching":2,"total":42,"outfieldNoCNoSta":35,"outfieldNoC":40,"keeper":9,"suggestedPosition":""},
@@ -216,5 +215,4 @@
     {"id":175,"name":"Oliver","speed":5,"kickPower":6,"heading":6,"sliding":6,"technique":7,"stamina":1,"strength":7,"catching":2,"total":40,"outfieldNoCNoSta":37,"outfieldNoC":38,"keeper":9,"suggestedPosition":""},
     {"id":148,"name":"Ollie","speed":3,"kickPower":8,"heading":6,"sliding":7,"technique":2,"stamina":8,"strength":4,"catching":2,"total":40,"outfieldNoCNoSta":30,"outfieldNoC":38,"keeper":6,"suggestedPosition":""},
     {"id":204,"name":"Sam","speed":7,"kickPower":3,"heading":6,"sliding":6,"technique":1,"stamina":6,"strength":5,"catching":6,"total":40,"outfieldNoCNoSta":28,"outfieldNoC":34,"keeper":11,"suggestedPosition":""},
-
 ]
