@@ -20,14 +20,6 @@
         <p><strong>Banane:</strong> <span id="credits">0</span></p>
     </div>
     <div>
-        <label for="position-filter">Filtra per Posizione:</label>
-        <select id="position-filter" onchange="filterCharacters()">
-            <option value="">Tutte</option>
-            <option value="Keeper">Portiere</option>
-            <option value="Defender">Difensore</option>
-            <option value="Midfield">Centrocampista</option>
-            <option value="Striker">Attaccante</option>
-        </select>
         <label for="name-filter">Cerca per Nome:</label>
         <input type="text" id="name-filter" oninput="filterCharacters()" placeholder="Inserisci nome...">
     </div>
@@ -35,7 +27,6 @@
         <thead>
             <tr>
                 <th data-sort="name" onclick="sortTable('name')">Nome</th>
-                <th data-sort="suggestedPosition" onclick="sortTable('suggestedPosition')">Posizione</th>
                 <th data-sort="total" onclick="sortTable('total')">Totale</th>
                 <th data-sort="speed" onclick="sortTable('speed')">Velocità</th>
                 <th data-sort="kickPower" onclick="sortTable('kickPower')">Potenza Tiro</th>
